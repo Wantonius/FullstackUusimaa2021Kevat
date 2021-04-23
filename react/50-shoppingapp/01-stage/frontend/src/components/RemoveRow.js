@@ -1,7 +1,7 @@
 import React from 'react';
 import {Table,Button} from 'semantic-ui-react';
 
-export default class Row extends React.Component {
+export default class RemoveRow extends React.Component {
 	
 	render() {
 		return (
@@ -9,10 +9,11 @@ export default class Row extends React.Component {
 				<Table.Cell>{this.props.item.type}</Table.Cell>
 				<Table.Cell>{this.props.item.count}</Table.Cell>
 				<Table.Cell>{this.props.item.price}</Table.Cell>
-				<Table.Cell><Button color="red" 
-				onClick={() => this.props.changeToRemoveState(this.props.item.id)}>Remove</Button></Table.Cell>
+				<Table.Cell><Button color="grey" 
+				onClick={() => this.props.
+				cancel()}>Cancel</Button></Table.Cell>
 				<Table.Cell><Button color="green" 
-				onClick={() => this.props.changeToEditState(this.props.item.id)}>Edit</Button></Table.Cell>
+				onClick={() => this.props.removeFromList(this.props.item.id)}>Confirm</Button></Table.Cell>
 			</Table.Row>
 		)
 	}
