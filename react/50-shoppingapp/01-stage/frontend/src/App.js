@@ -1,6 +1,9 @@
 import React from 'react';
 import './App.css';
 import ShoppingForm from './components/ShoppingForm';
+import ShoppingList from './components/ShoppingList';
+import Navbar from './components/Navbar';
+import {Switch,Route} from 'react-router-dom';
 
 class App extends React.Component {
 	
@@ -61,7 +64,16 @@ class App extends React.Component {
 	render() {
 	  return (
 		<div className="App">
-			<ShoppingForm addToList={this.addToList}/>
+			<Navbar/>
+			<hr/>
+			<Switch>
+				<Route exact path="/" render={() =>
+					(<ShoppingList list={this.state.list}/>)
+				}/>
+				<Route path="/form" render={() =>
+					(<ShoppingForm addToList={this.addToList}/>)
+				}/>			
+			</Switch>
 		</div>
 	  );
 	}
