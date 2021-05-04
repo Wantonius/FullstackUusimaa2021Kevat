@@ -21,6 +21,27 @@ createToken = () => {
 	return token.toString("hex");
 }
 
+isUserLogged = (req,res,next) => {
+	console.log("Moi!");
+	if(!req.headers.token) {
+		return res.status(403).json({message:"forbidden"})
+	}
+	for(let i=0;i<loggedSessions.length;i++) {
+		if(req.headers.token === loggedSessions[i].token) {
+			let now = Date.now();
+			if(now > loggedSessions[i].ttl) {
+				loggedSessions.splice(i,1);
+				return res.status(403).json({message:"forbidden"});
+			}
+			loggedSessions[i].ttl = now + time_to_live_diff;
+			req.session = {};
+			req.session.user = loggedSessions[i].user;
+			return next();
+		}
+	}
+	return res.status(403).json({message:"forbidden"})
+}
+
 //LOGIN API
 
 app.post("/register",function(req,res) {
@@ -90,7 +111,7 @@ app.post("/login",function(req,res) {
 	return res.status(401).json({message:"Unauthorized"});
 });
 
-app.use("/api",apiroutes);
+app.use("/api",isUserLogged,apiroutes);
 
 app.listen(3001);
 console.log("Running in port 3001");
