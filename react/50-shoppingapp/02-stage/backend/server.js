@@ -22,7 +22,6 @@ createToken = () => {
 }
 
 isUserLogged = (req,res,next) => {
-	console.log("Moi!");
 	if(!req.headers.token) {
 		return res.status(403).json({message:"forbidden"})
 	}
