@@ -131,6 +131,10 @@ class App extends React.Component {
 					console.log("Parsing of JSON failed. Reason:",error)
 				})
 			} else {
+				if(response.status === 403) {
+					console.log("Session expired! Logging out!");
+					this.clearState();
+				}
 				console.log("Server responded with a status:",response.status)
 			}
 		}).catch((error) => {
@@ -150,6 +154,10 @@ class App extends React.Component {
 			if(response.ok) {
 				this.getList();
 			} else {
+				if(response.status === 403) {
+					console.log("Session expired! Logging out!");
+					this.clearState();
+				}
 				console.log("Server responded with a status:",response.status);
 			}
 		}).catch((error) => {
@@ -168,6 +176,10 @@ class App extends React.Component {
 			if(response.ok) {
 				this.getList();
 			} else {
+				if(response.status === 403) {
+					console.log("Session expired! Logging out!");
+					this.clearState();
+				}
 				console.log("Server responded with a status:",response.status);
 			}
 		}).catch((error) => {
@@ -187,6 +199,10 @@ class App extends React.Component {
 			if(response.ok) {
 				this.getList();
 			} else {
+				if(response.status === 403) {
+					console.log("Session expired! Logging out!");
+					this.clearState();
+				}
 				console.log("Server responded with a status:",response.status);
 			}
 		}).catch((error) => {
