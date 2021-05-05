@@ -4,7 +4,7 @@ import ShoppingForm from './components/ShoppingForm';
 import ShoppingList from './components/ShoppingList';
 import LoginPage from './components/LoginPage';
 import Navbar from './components/Navbar';
-import {Switch,Route} from 'react-router-dom';
+import {Switch,Route,Redirect} from 'react-router-dom';
 
 class App extends React.Component {
 	
@@ -89,7 +89,27 @@ class App extends React.Component {
 			console.log("There was an error. Error:",error);
 		});		
 	}
-	
+
+	logout = () => {
+		let request = {
+			method:"POST",
+			mode:"cors",
+			headers:{"Content-type":"application/json",
+						"token":this.state.token}
+		}
+		fetch("/logout",request).then(response => {
+			if(response.ok) {
+				this.clearState();
+			} else {
+				this.clearState();
+				console.log("Server responded with a status:",response.status);
+			}
+		}).catch(error => {
+			console.log("There was an error:",error);
+			this.clearState();
+		})
+	}
+
 	//REST API
 	
 	getList = () => {
@@ -177,19 +197,22 @@ class App extends React.Component {
 	render() {
 	  return (
 		<div className="App">
-			<Navbar/>
+			<Navbar isLogged={this.state.isLogged} logout={this.logout}/>
 			<hr/>
 			<Switch>
-				<Route exact path="/" render={() => 
+				<Route exact path="/" render={() => this.state.isLogged ?
+					(<Redirect to="/list"/>) :
 					(<LoginPage register={this.register} login={this.login}/>)
 				}/>
-				<Route path="/list" render={() =>
+				<Route path="/list" render={() => this.state.isLogged ?
 					(<ShoppingList list={this.state.list}
 						removeFromList={this.removeFromList}
-						editItem={this.editItem}/>)
+						editItem={this.editItem}/>) :
+					(<Redirect to="/"/>)
 				}/>
-				<Route path="/form" render={() =>
-					(<ShoppingForm addToList={this.addToList}/>)
+				<Route path="/form" render={() => this.state.isLogged ?
+					(<ShoppingForm addToList={this.addToList}/>) :
+					(<Redirect to="/"/>)
 				}/>			
 			</Switch>
 		</div>
