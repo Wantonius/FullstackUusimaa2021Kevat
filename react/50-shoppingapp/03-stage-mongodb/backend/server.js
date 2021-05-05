@@ -5,6 +5,8 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const mongoose = require("mongoose");
 const config = require("./config/config");
+const userModel = require("./models/user");
+const sessionModel = require("./models/session");
 
 let app = express();
 
@@ -17,8 +19,7 @@ app.use(bodyParser.json());
 
 //LOGIN DATABASES
 
-let registeredUsers = [];
-let loggedSessions = [];
+
 const time_to_live_diff = 3600000;
 
 //MIDDLEWARE
@@ -60,22 +61,24 @@ app.post("/register",function(req,res) {
 	if(req.body.username.length < 4 || req.body.password.length < 8) {
 		return res.status(400).json({message:"Bad Request 3 "});
 	}
-	for(let i=0;i<registeredUsers.length;i++) {
-		if(req.body.username === registeredUsers[i].username) {
-			return res.status(409).json({message:"Username is already in use"});
-		}
-	}
 	bcrypt.hash(req.body.password,14,function(err,hash) {
 		if(err) {
 			return res.status(400).json({message:"Bad request 4"});
 		}
-		let user = {
+		let user = new userModel({
 			username:req.body.username,
 			password:hash
-		}
-		registeredUsers.push(user);
-		console.log(registeredUsers);
-		return res.status(201).json({message:"User registered"});
+		})
+		user.save(function(err,user) {
+			if(err) {
+				console.log("Failed to register new user. Reason:",err);
+				if(err.code === 11000) {
+					return res.status(409).json({message:"Username is already in use"})
+				}
+				return res.status(500).json({message:"Internal server error"})
+			}
+			return res.status(201).json({message:"User registered"});
+		})		
 	})
 });
 
