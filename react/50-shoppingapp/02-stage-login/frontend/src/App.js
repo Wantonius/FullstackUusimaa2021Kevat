@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import ShoppingForm from './components/ShoppingForm';
 import ShoppingList from './components/ShoppingList';
+import LoginPage from './components/LoginPage';
 import Navbar from './components/Navbar';
 import {Switch,Route} from 'react-router-dom';
 
@@ -10,12 +11,59 @@ class App extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			list:[]
+			list:[],
+			isLogged:false,
+			token:""
 		}
 	}
 	
 	componentDidMount() {
-		this.getList();
+		if(sessionStorage.getItem("state")) {
+			let state = JSON.parse(sessionStorage.getItem("state"));
+			this.setState(state, () => {
+				if(this.state.isLogged) {
+					this.getList();
+				}
+			})
+		}	
+	}
+	
+	saveToStorage = () => {
+		sessionStorage.setItem("state",JSON.stringify(this.state));
+	}
+	
+	clearState = () => {
+		this.setState({
+			list:[],
+			isLogged:false,
+			token:""
+		}, () => {
+			this.saveToStorage();
+		})
+	}
+	
+	//LOGIN API
+	
+	register = (user) => {
+		let request = {
+			method:"POST",
+			mode:"cors",
+			headers:{"Content-type":"application/json"},
+			body:JSON.stringify(user)
+		}
+		fetch("/register",request).then(response => {
+			if(response.ok) {
+				alert("Register Success!");
+			} else {
+				console.log("Server responded with a status:",response.status)
+			}
+		}).catch(error => {
+			console.log("There was an error. Error:",error);
+		});
+	}
+	
+	login = (user) => {
+		
 	}
 	
 	//REST API
@@ -102,7 +150,10 @@ class App extends React.Component {
 			<Navbar/>
 			<hr/>
 			<Switch>
-				<Route exact path="/" render={() =>
+				<Route exact path="/" render={() => 
+					(<LoginPage register={this.register} login={this.login}/>)
+				}/>
+				<Route path="/list" render={() =>
 					(<ShoppingList list={this.state.list}
 						removeFromList={this.removeFromList}
 						editItem={this.editItem}/>)
