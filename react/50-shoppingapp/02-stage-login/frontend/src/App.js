@@ -63,7 +63,31 @@ class App extends React.Component {
 	}
 	
 	login = (user) => {
-		
+		let request = {
+			method:"POST",
+			mode:"cors",
+			headers:{"Content-type":"application/json"},
+			body:JSON.stringify(user)
+		}
+		fetch("/login",request).then(response => {
+			if(response.ok) {
+				response.json().then(data => {
+					this.setState({
+						isLogged:true,
+						token:data.token
+					}, () => {
+						this.saveToStorage();
+						this.getList();
+					})
+				}).catch(error => {
+					console.log("Failed to parse JSON, Reason:",error);
+				});
+			} else {
+				console.log("Server responded with a status:",response.status)
+			}
+		}).catch(error => {
+			console.log("There was an error. Error:",error);
+		});		
 	}
 	
 	//REST API
@@ -72,13 +96,16 @@ class App extends React.Component {
 		let request = {
 			method:"GET",
 			mode:"cors",
-			headers:{"Content-type":"application/json"}
+			headers:{"Content-type":"application/json",
+					"token":this.state.token}
 		}
 		fetch("/api/shopping",request).then((response) => {
 			if(response.ok) {
 				response.json().then((data) => {
 					this.setState({
 						list:data
+					}, () => {
+						this.saveToStorage();
 					})
 				}).catch((error) => {
 					console.log("Parsing of JSON failed. Reason:",error)
@@ -95,7 +122,8 @@ class App extends React.Component {
 		let request = {
 			method:"POST",
 			mode:"cors",
-			headers:{"Content-type":"application/json"},
+			headers:{"Content-type":"application/json",
+						"token":this.state.token},
 			body:JSON.stringify(item)
 		}
 		fetch("/api/shopping",request).then((response) => {
@@ -113,7 +141,8 @@ class App extends React.Component {
 		let request = {
 			method:"DELETE",
 			mode:"cors",
-			headers:{"Content-type":"application/json"}
+			headers:{"Content-type":"application/json",
+					"token":this.state.token}
 		}
 		fetch("/api/shopping/"+id,request).then((response) => {
 			if(response.ok) {
@@ -130,7 +159,8 @@ class App extends React.Component {
 		let request = {
 			method:"PUT",
 			mode:"cors",
-			headers:{"Content-type":"application/json"},
+			headers:{"Content-type":"application/json",
+					"token":this.state.token},
 			body:JSON.stringify(item)
 		}
 		fetch("/api/shopping/"+item.id,request).then((response) => {
