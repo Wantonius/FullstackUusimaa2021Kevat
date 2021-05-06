@@ -22,7 +22,7 @@ export default class EditRow extends React.Component {
 		event.preventDefault();
 		let item = {
 			...this.state,
-			id:this.props.item.id
+			_id:this.props.item._id
 		}
 		this.props.editItem(item);
 	}	

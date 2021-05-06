@@ -195,7 +195,7 @@ class App extends React.Component {
 					"token":this.state.token},
 			body:JSON.stringify(item)
 		}
-		fetch("/api/shopping/"+item.id,request).then((response) => {
+		fetch("/api/shopping/"+item._id,request).then((response) => {
 			if(response.ok) {
 				this.getList();
 			} else {
