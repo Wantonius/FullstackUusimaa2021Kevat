@@ -1,7 +1,7 @@
 const config = {
-	username:,
-	password:,
-	url:
+	username:"test",
+	password:"test",
+	url:"cluster0.ujjvo.mongodb.net"
 }
 
 module.exports = config;

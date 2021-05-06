@@ -8,6 +8,9 @@ let router = express.Router();
 
 router.get("/shopping",function(req,res) {
 	let query = {"user":req.session.user}
+	if(req.query.type) {
+		query["type"] = req.query.type.toLowerCase();
+	}
 	itemModel.find(query,function(err,items) {
 		if(err) {
 			console.log("Failed to find items. Reason:",err);

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Table} from 'semantic-ui-react';
+import {Table,Button} from 'semantic-ui-react';
 import Row from './Row';
 import RemoveRow from './RemoveRow';
 import EditRow from './EditRow';
@@ -10,8 +10,22 @@ export default class ShoppingList extends React.Component {
 		super(props);
 		this.state = {
 			removeIndex:-1,
-			editIndex:-1
+			editIndex:-1,
+			search:""
 		}
+	}
+	
+	onChange = (event) => {
+		this.setState({
+			[event.target.name]:event.target.value
+		})
+	}
+	
+	searchByType = () => {
+		this.props.getList(this.state.search);
+		this.setState({
+			search:""
+		})
 	}
 	
 	changeToRemoveState = (id) => {
@@ -77,6 +91,13 @@ export default class ShoppingList extends React.Component {
 			)
 		})
 		return(
+		<div>
+			<label htmlFor="search">Search By Type:</label>
+			<input type="text"
+					name="search"
+					onChange={this.onChange}
+					value={this.state.search}/>
+			<Button onClick={this.searchByType} style={{marginLeft:10}}>Search</Button>
 			<Table striped>
 				<Table.Header>
 					<Table.Row>
@@ -91,6 +112,7 @@ export default class ShoppingList extends React.Component {
 				{items}
 				</Table.Body>
 			</Table>
+		</div>
 		)
 	}
 }
