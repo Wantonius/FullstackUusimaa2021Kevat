@@ -1,9 +1,0 @@
-For monday 7.12.
-
-- Project idea
-- A synopsis (half a page)
-- Maybe some UI mocks / or database design
-- The GIT (create your project git, public!)
-
-- Optionally more if you have a running project already.
-- Everyone will spend 5-10 mins explaining their project to others
