@@ -36,6 +36,52 @@ export const register = (user) => {
 		});
 	}
 }
+
+export const login = (user) => {
+	return (dispatch) => {
+		let request = {
+			method:"POST",
+			mode:"cors",
+			headers:{"Content-type":"application/json"},
+			body:JSON.stringify(user)
+		}
+		dispatch(loading());
+		fetch("/login",request).then(response => {
+			if(response.ok) {
+				response.json().then(data => {
+					dispatch(loginSuccess(data.token));
+				}).catch(error => {
+					dispatch(loginFailed("Failed to parse login information. Reason:"+error));
+				});
+			} else {
+				dispatch(loginFailed("Login failed. Server responded with a status:"+response.statusText));
+			}
+		}).catch(error => {
+			dispatch(loginFailed("There was an error:"+error));
+		});		
+	}
+}
+
+export const logout = (token) => {
+	return (dispatch) => {
+		let request = {
+			method:"POST",
+			mode:"cors",
+			headers:{"Content-type":"application/json",
+						"token":token}
+		}
+		dispatch(loading());
+		fetch("/logout",request).then(response => {
+			if(response.ok) {
+				dispatch(logoutSuccess());
+			} else {
+				dispatch(logoutFailed("Server responded with a status "+response.statusText+". Logging you out anyway"));
+			}
+		}).catch(error => {
+			dispatch(logoutFailed("There was an error. Logging you out. Error:"+error));
+		})
+	}
+}
 //ACTION CREATORS
 
 export const loading = () => {

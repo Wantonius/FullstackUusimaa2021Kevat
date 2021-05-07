@@ -5,15 +5,14 @@ import ShoppingList from './components/ShoppingList';
 import LoginPage from './components/LoginPage';
 import Navbar from './components/Navbar';
 import {Switch,Route,Redirect} from 'react-router-dom';
+import {connect} from 'react-redux';
 
 class App extends React.Component {
 	
 	constructor(props) {
 		super(props);
 		this.state = {
-			list:[],
-			isLogged:false,
-			token:""
+			list:[]
 		}
 	}
 	
@@ -21,7 +20,7 @@ class App extends React.Component {
 		if(sessionStorage.getItem("state")) {
 			let state = JSON.parse(sessionStorage.getItem("state"));
 			this.setState(state, () => {
-				if(this.state.isLogged) {
+				if(this.props.isLogged) {
 					this.getList();
 				}
 			})
@@ -34,9 +33,7 @@ class App extends React.Component {
 	
 	clearState = () => {
 		this.setState({
-			list:[],
-			isLogged:false,
-			token:""
+			list:[]
 		}, () => {
 			this.saveToStorage();
 		})
@@ -45,54 +42,8 @@ class App extends React.Component {
 	//LOGIN API
 	
 
-	
-	login = (user) => {
-		let request = {
-			method:"POST",
-			mode:"cors",
-			headers:{"Content-type":"application/json"},
-			body:JSON.stringify(user)
-		}
-		fetch("/login",request).then(response => {
-			if(response.ok) {
-				response.json().then(data => {
-					this.setState({
-						isLogged:true,
-						token:data.token
-					}, () => {
-						this.saveToStorage();
-						this.getList();
-					})
-				}).catch(error => {
-					console.log("Failed to parse JSON, Reason:",error);
-				});
-			} else {
-				console.log("Server responded with a status:",response.status)
-			}
-		}).catch(error => {
-			console.log("There was an error. Error:",error);
-		});		
-	}
 
-	logout = () => {
-		let request = {
-			method:"POST",
-			mode:"cors",
-			headers:{"Content-type":"application/json",
-						"token":this.state.token}
-		}
-		fetch("/logout",request).then(response => {
-			if(response.ok) {
-				this.clearState();
-			} else {
-				this.clearState();
-				console.log("Server responded with a status:",response.status);
-			}
-		}).catch(error => {
-			console.log("There was an error:",error);
-			this.clearState();
-		})
-	}
+
 
 	//REST API
 	
@@ -101,7 +52,7 @@ class App extends React.Component {
 			method:"GET",
 			mode:"cors",
 			headers:{"Content-type":"application/json",
-					"token":this.state.token}
+					"token":this.props.token}
 		}
 		let url = "/api/shopping"
 		if(search) {
@@ -135,7 +86,7 @@ class App extends React.Component {
 			method:"POST",
 			mode:"cors",
 			headers:{"Content-type":"application/json",
-						"token":this.state.token},
+						"token":this.props.token},
 			body:JSON.stringify(item)
 		}
 		fetch("/api/shopping",request).then((response) => {
@@ -158,7 +109,7 @@ class App extends React.Component {
 			method:"DELETE",
 			mode:"cors",
 			headers:{"Content-type":"application/json",
-					"token":this.state.token}
+					"token":this.props.token}
 		}
 		fetch("/api/shopping/"+id,request).then((response) => {
 			if(response.ok) {
@@ -180,7 +131,7 @@ class App extends React.Component {
 			method:"PUT",
 			mode:"cors",
 			headers:{"Content-type":"application/json",
-					"token":this.state.token},
+					"token":this.props.token},
 			body:JSON.stringify(item)
 		}
 		fetch("/api/shopping/"+item._id,request).then((response) => {
@@ -201,21 +152,21 @@ class App extends React.Component {
 	render() {
 	  return (
 		<div className="App">
-			<Navbar isLogged={this.state.isLogged} logout={this.logout}/>
+			<Navbar />
 			<hr/>
 			<Switch>
-				<Route exact path="/" render={() => this.state.isLogged ?
+				<Route exact path="/" render={() => this.props.isLogged ?
 					(<Redirect to="/list"/>) :
-					(<LoginPage login={this.login}/>)
+					(<LoginPage/>)
 				}/>
-				<Route path="/list" render={() => this.state.isLogged ?
+				<Route path="/list" render={() => this.props.isLogged ?
 					(<ShoppingList list={this.state.list}
 						removeFromList={this.removeFromList}
 						editItem={this.editItem}
 						getList={this.getList}/>) :
 					(<Redirect to="/"/>)
 				}/>
-				<Route path="/form" render={() => this.state.isLogged ?
+				<Route path="/form" render={() => this.props.isLogged ?
 					(<ShoppingForm addToList={this.addToList}/>) :
 					(<Redirect to="/"/>)
 				}/>			
@@ -225,4 +176,11 @@ class App extends React.Component {
 	}
 }
 
-export default App;
+const mapStateToProps = (state) => {
+	return {
+		isLogged:state.isLogged,
+		token:state.token
+	}
+}
+
+export default connect(mapStateToProps)(App);
