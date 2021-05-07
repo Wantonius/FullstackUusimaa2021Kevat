@@ -1,7 +1,9 @@
 import React from 'react'
 import {Form,Button} from 'semantic-ui-react';
+import {connect} from 'react-redux';
+import {register} from '../actions/loginActions';
 
-export default class LoginPage extends React.Component {
+class LoginPage extends React.Component {
 	
 	constructor(props) {
 		super(props);
@@ -19,12 +21,16 @@ export default class LoginPage extends React.Component {
 	
 	onSubmit = (event) => {
 		event.preventDefault();
+		if(this.state.username.length < 4 || this.state.password.length < 8) {
+			alert("Username must be 4 characters and password 8 characters long");
+			return;
+		}
 		let user = {
 			username:this.state.username,
 			password:this.state.password
 		}
 		if(event.target.name === "register") {
-			this.props.register(user);
+			this.props.dispatch(register(user));
 		} else {
 			this.props.login(user);
 		}
@@ -55,3 +61,5 @@ export default class LoginPage extends React.Component {
 	}
 	
 }
+
+export default connect()(LoginPage);
