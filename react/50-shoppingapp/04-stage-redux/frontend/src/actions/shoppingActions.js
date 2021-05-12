@@ -80,6 +80,67 @@ export const addToList = (token,item) => {
 		});
 	}
 }
+
+export const removeFromList = (token,id) => {
+	return (dispatch) => {
+		let request = {
+			method:"DELETE",
+			mode:"cors",
+			headers:{"Content-type":"application/json",
+					"token":token}
+		}
+		dispatch(loading());
+		fetch("/api/shopping/"+id,request).then((response) => {
+			dispatch(stopLoading());
+			if(response.ok) {
+				dispatch(removeFromListSuccess());
+				dispatch(getList(token));
+			} else {
+				if(response.status === 403) {
+					dispatch(clearLoginState());
+					dispatch(clearShoppingState());
+					dispatch(removeFromListFailed("Session has expired. Log in again!"));
+				} else {
+					dispatch(removeFromListFailed("Server responded with a status:"+response.statusText))
+				}
+			}
+		}).catch((error) => {
+			dispatch(stopLoading());
+			dispatch(removeFromListFailed("There was an error. Error:"+error));
+		});
+	}
+}
+
+export const editItem = (token,item) => {
+	return (dispatch) => {
+		let request = {
+			method:"PUT",
+			mode:"cors",
+			headers:{"Content-type":"application/json",
+					"token":token},
+			body:JSON.stringify(item)
+		}
+		dispatch(loading());
+		fetch("/api/shopping/"+item._id,request).then((response) => {
+			dispatch(stopLoading());
+			if(response.ok) {
+				dispatch(editItemSuccess());
+				dispatch(getList(token));
+			} else {
+				if(response.status === 403) {
+					dispatch(clearLoginState());
+					dispatch(clearShoppingState());
+					dispatch(editItemFailed("Session has expired. Log in again!"));
+				} else {
+					dispatch(editItemFailed("Server responded with a status:"+response.statusText))
+				}
+			}
+		}).catch((error) => {
+			dispatch(stopLoading());
+			dispatch(editItemFailed("There was an error. Error:"+error));
+		});
+	}
+}
 //ACTION CREATORS
 
 export const fetchListSuccess = (list) => {

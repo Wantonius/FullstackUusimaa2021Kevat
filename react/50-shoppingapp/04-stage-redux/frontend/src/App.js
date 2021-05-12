@@ -9,57 +9,6 @@ import {connect} from 'react-redux';
 
 class App extends React.Component {
 
-
-	
-
-	
-
-
-	removeFromList = (id) => {
-		let request = {
-			method:"DELETE",
-			mode:"cors",
-			headers:{"Content-type":"application/json",
-					"token":this.props.token}
-		}
-		fetch("/api/shopping/"+id,request).then((response) => {
-			if(response.ok) {
-				this.getList();
-			} else {
-				if(response.status === 403) {
-					console.log("Session expired! Logging out!");
-					this.clearState();
-				}
-				console.log("Server responded with a status:",response.status);
-			}
-		}).catch((error) => {
-			console.log("Connection refused. Reason:",error);
-		});
-	}
-
-	editItem = (item) => {
-		let request = {
-			method:"PUT",
-			mode:"cors",
-			headers:{"Content-type":"application/json",
-					"token":this.props.token},
-			body:JSON.stringify(item)
-		}
-		fetch("/api/shopping/"+item._id,request).then((response) => {
-			if(response.ok) {
-				this.getList();
-			} else {
-				if(response.status === 403) {
-					console.log("Session expired! Logging out!");
-					this.clearState();
-				}
-				console.log("Server responded with a status:",response.status);
-			}
-		}).catch((error) => {
-			console.log("Connection refused. Reason:",error);
-		});
-	}
-	
 	render() {
 	  return (
 		<div className="App">
@@ -71,13 +20,11 @@ class App extends React.Component {
 					(<LoginPage/>)
 				}/>
 				<Route path="/list" render={() => this.props.isLogged ?
-					(<ShoppingList removeFromList={this.removeFromList}
-						editItem={this.editItem}
-						/>) :
+					(<ShoppingList />) :
 					(<Redirect to="/"/>)
 				}/>
 				<Route path="/form" render={() => this.props.isLogged ?
-					(<ShoppingForm addToList={this.addToList}/>) :
+					(<ShoppingForm />) :
 					(<Redirect to="/"/>)
 				}/>			
 			</Switch>
@@ -88,8 +35,7 @@ class App extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		isLogged:state.login.isLogged,
-		token:state.login.token
+		isLogged:state.login.isLogged
 	}
 }
 
