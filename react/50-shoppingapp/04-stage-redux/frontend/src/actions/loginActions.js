@@ -1,3 +1,5 @@
+import {getList,clearShoppingState} from './shoppingActions';
+
 //ACTION CONSTANTS
 
 export const LOADING = "LOADING";
@@ -50,6 +52,7 @@ export const login = (user) => {
 			if(response.ok) {
 				response.json().then(data => {
 					dispatch(loginSuccess(data.token));
+					dispatch(getList(data.token));
 				}).catch(error => {
 					dispatch(loginFailed("Failed to parse login information. Reason:"+error));
 				});
@@ -74,11 +77,14 @@ export const logout = (token) => {
 		fetch("/logout",request).then(response => {
 			if(response.ok) {
 				dispatch(logoutSuccess());
+				dispatch(clearShoppingState());
 			} else {
 				dispatch(logoutFailed("Server responded with a status "+response.statusText+". Logging you out anyway"));
+				dispatch(clearShoppingState());
 			}
 		}).catch(error => {
 			dispatch(logoutFailed("There was an error. Logging you out. Error:"+error));
+			dispatch(clearShoppingState());
 		})
 	}
 }

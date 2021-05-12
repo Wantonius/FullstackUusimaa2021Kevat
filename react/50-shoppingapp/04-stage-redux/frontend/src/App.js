@@ -8,78 +8,10 @@ import {Switch,Route,Redirect} from 'react-router-dom';
 import {connect} from 'react-redux';
 
 class App extends React.Component {
-	
-	constructor(props) {
-		super(props);
-		this.state = {
-			list:[]
-		}
-	}
-	
-	componentDidMount() {
-		if(sessionStorage.getItem("state")) {
-			let state = JSON.parse(sessionStorage.getItem("state"));
-			this.setState(state, () => {
-				if(this.props.isLogged) {
-					this.getList();
-				}
-			})
-		}	
-	}
-	
-	saveToStorage = () => {
-		sessionStorage.setItem("state",JSON.stringify(this.state));
-	}
-	
-	clearState = () => {
-		this.setState({
-			list:[]
-		}, () => {
-			this.saveToStorage();
-		})
-	}
-	
-	//LOGIN API
-	
 
 
-
-
-	//REST API
 	
-	getList = (search) => {
-		let request = {
-			method:"GET",
-			mode:"cors",
-			headers:{"Content-type":"application/json",
-					"token":this.props.token}
-		}
-		let url = "/api/shopping"
-		if(search) {
-			url = url +"?type="+search
-		}
-		fetch(url,request).then((response) => {
-			if(response.ok) {
-				response.json().then((data) => {
-					this.setState({
-						list:data
-					}, () => {
-						this.saveToStorage();
-					})
-				}).catch((error) => {
-					console.log("Parsing of JSON failed. Reason:",error)
-				})
-			} else {
-				if(response.status === 403) {
-					console.log("Session expired! Logging out!");
-					this.clearState();
-				}
-				console.log("Server responded with a status:",response.status)
-			}
-		}).catch((error) => {
-			console.log("Connection rejected. Reason:",error);
-		});
-	}
+
 	
 	addToList = (item) => {
 		let request = {
@@ -160,10 +92,9 @@ class App extends React.Component {
 					(<LoginPage/>)
 				}/>
 				<Route path="/list" render={() => this.props.isLogged ?
-					(<ShoppingList list={this.state.list}
-						removeFromList={this.removeFromList}
+					(<ShoppingList removeFromList={this.removeFromList}
 						editItem={this.editItem}
-						getList={this.getList}/>) :
+						/>) :
 					(<Redirect to="/"/>)
 				}/>
 				<Route path="/form" render={() => this.props.isLogged ?
