@@ -178,8 +178,8 @@ class App extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		isLogged:state.isLogged,
-		token:state.token
+		isLogged:state.login.isLogged,
+		token:state.login.token
 	}
 }
 
