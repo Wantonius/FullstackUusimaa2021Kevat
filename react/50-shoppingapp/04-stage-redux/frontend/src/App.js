@@ -13,28 +13,7 @@ class App extends React.Component {
 	
 
 	
-	addToList = (item) => {
-		let request = {
-			method:"POST",
-			mode:"cors",
-			headers:{"Content-type":"application/json",
-						"token":this.props.token},
-			body:JSON.stringify(item)
-		}
-		fetch("/api/shopping",request).then((response) => {
-			if(response.ok) {
-				this.getList();
-			} else {
-				if(response.status === 403) {
-					console.log("Session expired! Logging out!");
-					this.clearState();
-				}
-				console.log("Server responded with a status:",response.status);
-			}
-		}).catch((error) => {
-			console.log("Connection refused. Reason:",error);
-		});
-	}
+
 
 	removeFromList = (id) => {
 		let request = {
