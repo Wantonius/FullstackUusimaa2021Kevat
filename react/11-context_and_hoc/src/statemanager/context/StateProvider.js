@@ -50,7 +50,7 @@ export default class StateProvider extends React.Component {
 	editItem = (item) => {
 		let tempList = this.state.list;
 		for(let i=0;i<this.state.list.length;i++) {
-			if(this.state.list[i]._id === item.id) {
+			if(this.state.list[i]._id === item._id) {
 				tempList.splice(i,1,item);
 				this.setState({
 					list:tempList
