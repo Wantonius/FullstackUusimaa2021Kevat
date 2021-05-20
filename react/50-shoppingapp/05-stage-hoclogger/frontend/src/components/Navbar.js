@@ -3,6 +3,7 @@ import {List,Header} from 'semantic-ui-react'
 import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {logout} from '../actions/loginActions';
+import HocLogger from '../hoclogger/HocLogger';
 
 class Navbar extends React.Component {
 	
@@ -25,7 +26,11 @@ class Navbar extends React.Component {
 					<List>
 						<List.Item><Link to="/list">Shopping List</Link></List.Item>
 						<List.Item><Link to="/form">Add to list</Link></List.Item>
-						<List.Item><Link to="/" onClick={() => this.props.dispatch(logout(this.props.token))}>Logout</Link></List.Item>
+						<List.Item><Link to="/" onClick={() => {
+							this.props.dispatch(logout(this.props.token))
+							this.props.hoclog(this.props.loglevel.LOG_INFO,"Navbar","Logout")
+							}}
+							>Logout</Link></List.Item>
 					</List>
 				</div>
 			)
@@ -55,4 +60,4 @@ const mapStateToProps = (state) => {
 	}
 }
 
-export default connect(mapStateToProps)(Navbar);
+export default HocLogger(connect(mapStateToProps)(Navbar));

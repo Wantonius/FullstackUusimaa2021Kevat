@@ -2,6 +2,7 @@ import React from 'react';
 import {Form,Button} from 'semantic-ui-react';
 import {connect} from 'react-redux';
 import {addToList} from '../actions/shoppingActions';
+import HocLogger from '../hoclogger/HocLogger';
 
 class ShoppingForm extends React.Component {
 	
@@ -26,6 +27,7 @@ class ShoppingForm extends React.Component {
 			...this.state
 		}
 		this.props.dispatch(addToList(this.props.token,item));
+		this.props.hoclog(this.props.loglevel.LOG_INFO,"ShoppingForm","Add new item:"+item);
 		this.setState({
 			type:"",
 			count:0,
@@ -73,4 +75,4 @@ const mapStateToProps = (state) => {
 	}
 }
 
-export default connect(mapStateToProps)(ShoppingForm);
+export default HocLogger(connect(mapStateToProps)(ShoppingForm));
