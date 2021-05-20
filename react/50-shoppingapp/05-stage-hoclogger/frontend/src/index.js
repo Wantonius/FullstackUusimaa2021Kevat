@@ -10,6 +10,7 @@ import {Provider} from 'react-redux';
 import loginReducer from './reducers/loginReducer';
 import shoppingReducer from './reducers/shoppingReducer';
 import thunk from 'redux-thunk';
+import HocLoggerProvider from './hoclogger/context/HocLoggerProvider';
 
 const rootReducer = combineReducers({
 	login:loginReducer,
@@ -20,11 +21,13 @@ const store = createStore(rootReducer,applyMiddleware(thunk));
 
 ReactDOM.render(
   <React.StrictMode>
-  <Provider store={store}>
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
-  </Provider>
+	  <HocLoggerProvider url="">
+		  <Provider store={store}>
+			  <BrowserRouter>
+				<App />
+			  </BrowserRouter>
+		  </Provider>
+	  </HocLoggerProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
