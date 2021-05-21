@@ -1,25 +1,38 @@
 import logo from './logo.svg';
 import './App.css';
+import ShoppingForm from './ShoppingForm';
+import ShoppingList from './ShoppingList';
+import useAppState from './hooks/useappstate';
+import useAction from './hooks/useaction';
+import {useEffect} from 'react';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	
+	const state = useAppState();
+	const {fetchList,add,remove} = useAction();
+	
+	useEffect(() => {
+		fetchList();
+	},[]);
+	
+	let header = <h2>Shopping App</h2>
+	if(state.loading) {
+		header = <h2>Loading ...</h2>
+	}
+	if(state.error) {
+		header = <h2>{state.error}</h2>
+	}
+	
+	return (
+		<div className="App">
+			<div style={{height:100,backgroundColor:"lightblue"}}>
+				{header}
+			</div>
+			<ShoppingForm/>
+			<hr/>
+			<ShoppingList/>
+		</div>	
+	);
 }
 
 export default App;

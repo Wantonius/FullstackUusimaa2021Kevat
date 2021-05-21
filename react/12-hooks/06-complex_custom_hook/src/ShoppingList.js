@@ -1,12 +1,18 @@
-const ShoppingList = ({list,removeFromList}) => {
+import useAppState from './hooks/useappstate';
+import useAction from './hooks/useaction';
+
+const ShoppingList = (props) => {
 	
-	let items = list.map((item) => {
+	const state = useAppState();
+	const {fetchList,add,remove} = useAction()
+	
+	let items = state.list.map((item) => {
 		return (
 			<tr key={item.id}>
 				<td>{item.type}</td>
 				<td>{item.count}</td>
 				<td>{item.price}</td>
-				<td><button onClick={() => removeFromList(item.id)}>Remove</button></td>
+				<td><button onClick={() => remove(item.id)}>Remove</button></td>
 			</tr>
 		)
 	})

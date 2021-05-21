@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import useAction from './hooks/useaction';
 
 const ShoppingForm = (props) => {
 	
@@ -7,6 +8,8 @@ const ShoppingForm = (props) => {
 		price:0,
 		count:0
 	})
+	
+	const {fetchList,add,remove} = useAction()
 	
 	const onChange = (event) => {
 		setItem({
@@ -17,7 +20,7 @@ const ShoppingForm = (props) => {
 	
 	const onSubmit = (event) => {
 		event.preventDefault();
-		props.addToList(item);
+		add(item);
 		setItem({
 			type:"",
 			price:0,
