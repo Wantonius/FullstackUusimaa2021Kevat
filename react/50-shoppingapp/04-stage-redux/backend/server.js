@@ -4,17 +4,21 @@ const apiroutes = require("./routes/apiroutes");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const mongoose = require("mongoose");
-const config = require("./config/config");
 const userModel = require("./models/user");
 const sessionModel = require("./models/session");
 
 let app = express();
 
-mongoose.connect("mongodb+srv://"+config.username+":"+config.password+"@"+config.url+"/webshopping?retryWrites=true&w=majority").then(
+app.use(express.static("build"));
+
+const mongo_user = process.env.MONGOCLOUD_USER;
+const mongo_password = process.env.MONGOCLOUD_PASSWORD;
+const mongo_url = process.env.MONGOCLOUD_URL;
+
+mongoose.connect("mongodb+srv://"+mongo_user+":"+mongo_password+"@"+mongo_url+"/webshopping?retryWrites=true&w=majority").then(
 	() => console.log("Connected to mongoDB"),
 	(error) => console.log("Failed to connect to mongodb. Reason:",error)
 )
-
 app.use(bodyParser.json());
 
 //LOGIN DATABASES
