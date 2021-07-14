@@ -2,6 +2,7 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import GreetingForm from './GreetingForm';
+import GreetingPage from './GreetingPage';
 
 const Stack = createStackNavigator();
 
@@ -32,6 +33,9 @@ export default class App extends React.Component {
 				<Stack.Navigator>
 					<Stack.Screen name="GreetingForm">
 					{props => <GreetingForm {...props} setGreeting={this.setGreeting}/>}
+					</Stack.Screen>
+					<Stack.Screen name="GreetingPage">
+					{props => <GreetingPage {...props} {...this.state}/>}
 					</Stack.Screen>
 				</Stack.Navigator>
 			</NavigationContainer>
