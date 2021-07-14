@@ -25,6 +25,43 @@ export default class ShoppingForm extends React.Component {
 			count:0,
 			price:0
 		})
+		this.props.navigation.navigate("ShoppingList");
+	}
+	
+	render() {
+		return(
+			<View style={styles.container}>
+				<View style={styles.row}>
+					<Text style={[styles.text,styles.label]}>Type:</Text>
+					<TextInput style={styles.text}
+								onChangeText={(text) => this.setState({
+									type:text
+								})} value={this.state.type}/>
+				</View>
+				<View style={styles.row}>
+					<Text style={[styles.text,styles.label]}>Count:</Text>
+					<TextInput style={styles.text}
+								onChangeText={(text) => this.setState({
+									count:text
+								})} value={this.state.count}
+								keyboardType="numeric"/>
+				</View>
+				<View style={styles.row}>
+					<Text style={[styles.text,styles.label]}>Price:</Text>
+					<TextInput style={styles.text}
+								onChangeText={(text) => this.setState({
+									price:text
+								})} value={this.state.price}
+								keyboardType="numeric"/>
+				</View>
+				<View style={styles.row}>
+					<Pressable style={styles.addButton} 
+							onPress={() => this.addToList()}>
+							<Text style={styles.text}>Add</Text>
+					</Pressable>
+				</View>
+			</View>
+		)
 	}
 }
 
