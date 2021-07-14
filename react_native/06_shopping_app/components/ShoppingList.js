@@ -19,15 +19,12 @@ export default class ShoppingList extends React.Component {
 									({item}) => {
 										return (
 											<View style={styles.row}>
-
 												<Text style={styles.textStyle}>Count:{item.count}</Text>
 												<Text style={styles.textStyle}>Type:{item.type}</Text>
 												<Text style={styles.textStyle}>Price:{item.price}</Text>
-
-
 												<Pressable style={styles.buttonStyle} 
 												onPress={() => this.removeFromList(item.id)}>
-												<Text style={styles.textStyle}>Remove</Text>
+													<Text style={styles.textStyle}>Remove</Text>
 												</Pressable>
 											</View>
 										
