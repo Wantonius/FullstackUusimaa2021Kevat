@@ -1,7 +1,8 @@
 import React from 'react';
 import {View,Pressable,Text,TextInput,StyleSheet} from 'react-native';
+import StateManager from './context/StateManager';
 
-export default class LoginPage extends React.Component {
+class LoginPage extends React.Component {
 	
 	constructor(props) {
 		super(props);
@@ -98,3 +99,5 @@ const styles = StyleSheet.create({
 		fontWeight:"bold"
 	}
 })
+
+export default StateManager(LoginPage);

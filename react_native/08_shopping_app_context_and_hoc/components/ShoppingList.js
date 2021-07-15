@@ -1,7 +1,8 @@
 import React from 'react';
 import {FlatList,View,Button,Pressable,Text,StyleSheet} from 'react-native';
+import StateManager from './context/StateManager';
 
-export default class ShoppingList extends React.Component {
+class ShoppingList extends React.Component {
 
 	removeFromList = (id) => {
 		this.props.removeFromList(id);
@@ -11,6 +12,7 @@ export default class ShoppingList extends React.Component {
 		return(
 			<View style={styles.container}>
 				<View style={styles.buttonBox}>
+					<Button onPress={() => this.props.logout()} title="Logout"/>
 					<Button onPress={()=>this.props.navigation.navigate("Add Item")} title="Add Item"/>
 				</View>
 				<View style={styles.listBox}>
@@ -72,3 +74,6 @@ const styles = StyleSheet.create({
 		justifyContent:"center"
 	}
 })
+
+
+export default StateManager(ShoppingList);

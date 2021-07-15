@@ -77,7 +77,7 @@ export default class StateProvider extends React.Component {
 							this.saveStorage();
 						})
 					}).catch((error) => {
-						console.log(error)
+						this.setError(error);
 					})
 				}
 				if(action === "logout") {
@@ -97,7 +97,7 @@ export default class StateProvider extends React.Component {
 							this.saveStorage();
 						})
 					}).catch(error => {
-						console.log(error)
+						this.setError(error);
 					})
 				}
 				if(action === "addtolist") {
@@ -122,12 +122,62 @@ export default class StateProvider extends React.Component {
 						token:"",
 						loading:false,						
 						error:"Server responded with a conflict. Logging you out!"
+					}, () => {
+						this.saveStorage();
 					})
 				}
+				if(action === "getlist") {
+					if(response.status === 403) {
+						this.setState({
+							list:[],
+							isLogged:false,
+							token:"",
+							loading:false,						
+							error:"Session expired! Logging you out"
+						}, () => {
+							this.saveStorage();
+						})						
+					} else {
+						let error = "Error! Server responded with a status:"+response.status
+						this.setError(error);
+					}
+				}
+				if(action === "addtolist") {
+					if(response.status === 403) {
+						this.setState({
+							list:[],
+							isLogged:false,
+							token:"",
+							loading:false,						
+							error:"Session expired! Logging you out"
+						}, () => {
+							this.saveStorage();
+						})						
+					} else {
+						let error = "Error! Server responded with a status:"+response.status
+						this.setError(error);
+					}
+				}
+				if(action === "removefromlist") {
+					if(response.status === 403) {
+						this.setState({
+							list:[],
+							isLogged:false,
+							token:"",
+							loading:false,						
+							error:"Session expired! Logging you out"
+						}, () => {
+							this.saveStorage();
+						})						
+					} else {
+						let error = "Error! Server responded with a status:"+response.status
+						this.setError(error);
+					}
+				}				
 			}
 		}).catch((error) => {
 			this.setLoading(false);
-			console.log(error);
+			this.setError(error);
 		});
 	}
 	
@@ -200,5 +250,24 @@ export default class StateProvider extends React.Component {
 					  "token":this.state.token}
 		}
 		this.handleFetch(request,url,"removefromlist");
+	}
+	
+	render() {
+		return(
+			<StateContext.Provider value={{
+				isLogged:this.state.isLogged,
+				token:this.state.token,
+				loading:this.state.loading,
+				list:this.state.list,
+				error:this.state.error,
+				login:this.login,
+				register:this.register,
+				logout:this.logout,
+				addToList:this.addToList,
+				removeFromList:this.removeFromList
+			}}>
+				{this.props.children}
+			</StateContext.Provider>
+		)
 	}
 }

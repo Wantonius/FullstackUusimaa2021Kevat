@@ -1,7 +1,8 @@
 import React from 'react';
 import {View,Pressable,Text,TextInput,StyleSheet} from 'react-native';
+import StateManager from './context/StateManager';
 
-export default class ShoppingForm extends React.Component {
+class ShoppingForm extends React.Component {
 
 	constructor(props) {
 		super(props);
@@ -92,3 +93,5 @@ const styles = StyleSheet.create({
 		fontWeight:"bold"
 	}
 })
+
+export default StateManager(ShoppingForm);

@@ -6,7 +6,7 @@ const StateManager = (Component) => {
 		render() {
 			return (
 				<StateContext.Consumer>
-				{state => <Component {...this.props} {..state}/>}
+				{state => <Component {...this.props} {...state}/>}
 				</StateContext.Consumer>
 			)
 		}
